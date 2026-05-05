@@ -3,7 +3,7 @@ BUILD   := build
 TARGET  := $(BUILD)/Machina.exe
 RARG    := hello
 
-CC      := gcc
+CC      := g++
 # Added -fno-diagnostics-show-caret to CFLAGS for cleaner pragma output
 CFLAGS  := -fno-diagnostics-show-caret -Wall
 INCLUDE := 
@@ -12,8 +12,8 @@ LIBS    :=
 
 # --- Source & Objects ---
 # This ensures .o files are tracked inside the $(BUILD) directory
-SRC     := $(wildcard *.c)
-OBJ     := $(SRC:%.c=$(BUILD)/%.o)
+SRC     := $(wildcard *.cpp)
+OBJ     := $(SRC:%.cpp=$(BUILD)/%.o)
 
 # --- Rules ---
 
@@ -30,7 +30,7 @@ $(TARGET): $(OBJ)
 	@$(CC) -o $@ $(OBJ) $(LIB) $(LIBS)
 
 # Compile .c files to .o files in the build directory
-$(BUILD)/%.o: %.c
+$(BUILD)/%.o: %.cpp
 	@echo Compiling $<
 	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
 

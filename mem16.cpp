@@ -23,6 +23,4 @@ void mem16::tick() {
     
 }
 
-void start() {
-    
-}
+void mem16::start() {}

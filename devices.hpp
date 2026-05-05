@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
+
+typedef uint16_t WORD_;
+
 namespace machina {
     typedef struct {
         uint16_t data;
@@ -14,7 +17,7 @@ namespace machina {
     class device {
         std::vector<Port> ports;
         char did[17];
-        uint16_t dType;
+        WORD_ dType;
         size_t Deviceflag , port_count , port_available;
         
         public:
@@ -41,7 +44,7 @@ namespace machina {
         // void RegisterType(uint16_t dType) {
         //     int s = machina::Device::deviceMap[dType];
         // }
-        void Send(size_t port_num , uint16_t data) {
+        void Send(size_t port_num , WORD_ data) {
             if (port_num >= port_count) return;
             this->ports[port_num].line->data = data;
         }
@@ -59,6 +62,9 @@ namespace machina {
         virtual void tick() {
             std::cout << "WIP" << '\n';
         }
+        virtual void start() {
+            std::cout << "WIP" << '\n';
+        };
         private: // static stuff
         //    static std::map<uint16_t> deviceMap;
     };

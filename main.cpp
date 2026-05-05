@@ -5,42 +5,19 @@ using namespace machina;
 
 int main() {
     mem16 MMD;
-
+    device devX;
+    devX.RegisterPortS1(16);
+    MMD.RegisterPortS1(4);
+    std::array<BusLine , 4> MemoryLane;
+    for (auto& line : MemoryLane) {
+        Port p;
+        p.line = &line;
+        MMD.RegisterPortS2(p);
+        devX.RegisterPortS2(p);
+    }
+    devX.Send(0 , 1);
+    devX.Send(1 , 0xbeaf);
+    devX.Send(2 , 0xdead);
     MMD.tick();
-
-    // std::array<BusLine , 8> MainLine;
-    // std::array<uint16_t , 256> Memory; // 256 for now so i dont blow up my terminal
-    // device Ram;
-    // Ram.RegisterPortS1(8);
-    // for (auto& Line : MainLine) {
-    //     Port p;
-    //     p.line = &Line;
-    //     Ram.RegisterPortS2(p);
-    // }
-    // device devX;
-    // devX.RegisterPortS1(8);
-    // for (auto& Line : MainLine) {
-    //     Port p;
-    //     p.line = &Line;
-    //     devX.RegisterPortS2(p);
-    // }
-    // devX.tick();
-    // devX.Send(0 , 64);
-    // devX.Send(1 , 420);
-
-    // Ram.tick();
-    // uint16_t address = Ram.Receive(0);
-    // uint16_t data = Ram.Receive(1);
-    // Memory[address] = data;
-
-    // int i = 0;
-    // for (auto& s : Memory) {
-    //     std::cout << std::hex << s;
-    //     if (i < 16) {
-    //         std::cout << '\n';
-    //         i = -1;
-    //     }
-    //     i++;
-    // }
     return 0;
 }

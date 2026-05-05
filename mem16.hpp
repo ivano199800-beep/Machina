@@ -9,5 +9,6 @@ namespace machina {
         std::array<uint16_t , 0x10000> data;
         public:
             void tick() override;
+            //void start() override;
     };
 }

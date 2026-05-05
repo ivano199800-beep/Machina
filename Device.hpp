@@ -50,7 +50,7 @@ namespace machina {
             return this->ports[port_num].line->data;
         }
         void SetID(const std::string& s) {
-            for (int i = 0 ; i < 16 && i < s.length() ; i++) {
+            for (size_t i = 0 ; i < 16 && i < s.length() ; i++) {
                 this->did[i]  = s[i];
             }
             this->did[16] = 0;

@@ -7,13 +7,14 @@
 #include "devices.h"
 typedef struct {
     uint8_t wordSize;
-    uint8_t* data[WORD_ / 8];
+    uint8_t (*data)[WORD_ / 8];
 } MemoryPage;
 
 typedef struct {
     size_t PageSize;
     size_t count , capacity;
     MemoryPage* pages;
+    unsigned long long state;
 } MemoryData;
 
 Device* NewBaseMemory(const char* config);

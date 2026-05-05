@@ -1,4 +1,4 @@
-#define DEVICE_ MAIN
+#define DEVICE_ Main
 #include "devices.h"
 #include "core.h"
 int main() {

@@ -5,7 +5,7 @@
 #define WORD_ 2
 #include "devices.h"
 
-#define ISA_STORE 0
+#define ISA_STORE 30
 #define ISA_LOAD 1 
 #define ISA_SEND 2
 #define ISA_RECV 3
@@ -34,7 +34,8 @@
 #define ISA_FLAG 26
 #define ISA_LSFT 27
 #define ISA_RSFT 28
-
+#define ISA_RETU 29
+#define ISA_NOP 0
 
 typedef struct {
     uint16_t registers[4]; // A B SP PC

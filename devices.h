@@ -27,7 +27,7 @@ typedef Status(*DeviceMethod)(Device*,State*);
 typedef struct Device {
     uint16_t        DID; // assigned per instance of Device 
     uint16_t        Dtype; // assigned based on the registered Device
-    char            CID[36]; // Character ID
+    char            CID[34]; // Character ID
     DeviceMethod    Create;
     DeviceMethod    Clock;
     DeviceMethod    Destroy;

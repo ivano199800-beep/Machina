@@ -11,14 +11,14 @@ namespace machina {
     typedef struct {
         BusLine* line;
     } Port;
-    class Device {
+    class device {
         std::vector<Port> ports;
         char did[17];
         uint16_t dType;
         size_t Deviceflag , port_count , port_available;
         
         public:
-        Device() {
+        device() {
             Deviceflag = 0;
             port_count = 0;
             port_available = 0;

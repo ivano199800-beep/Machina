@@ -22,7 +22,7 @@ int main() {
     MMD.tick();
     devX.Send(0 , 2);
     devX.Send(1 , 0xbeaf);
-    devX.Send(2 , 0xdeaf);
+    devX.Send(2 , 0xdead);
     MMD.tick();
     return 0;
 }

@@ -6,7 +6,7 @@
 #include <map>
 
 typedef uint16_t WORD_;
-
+typedef uint8_t HWORD_;
 namespace machina {
     typedef struct {
         uint16_t data;

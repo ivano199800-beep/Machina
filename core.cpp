@@ -9,9 +9,7 @@ static HWORD_ iMode = 0;
 void core16::tick() {
     // port 0 to 7 is for the board
     if (!state) {
-        // tell the board its idle
-        this->Send(0 , 0);
-        this->Send(1 , 1);
+        if (this->Receive( 0 )) state = 1;
         return;
     }
     if (state == 1) {
@@ -26,16 +24,22 @@ void core16::tick() {
             
         } else if (iMode == 1) {
             instr = memoryReg;
-            HWORD_ opcode = (instr >> 12) & 0xf;
-            HWORD_ opmode = (instr >> 8) & 0xf;
+            HWORD_ opcode = (instr >> 11) & 0xf;
+            HWORD_ opmode = (instr >> 8) & 0x3;
             HWORD_ rMode  = (instr >> 5) & 0x7;
             HWORD_ regA   = (instr >> 2) & 0x7;
             HWORD_ regB   = instr & 0x3;
             
-            switch (opcode) {
-
+            switch ((isa)opcode) {
+                case isa::NOP:
+                    break;
+                case isa::HLT:                    
+                    this->Send(0 , 1);
+                    this->Send(1 , 1);
+                    break;
+                default:
+                    break;
             }
-
             this->regx[7]++;
         }
     } else if (state == 3) {

@@ -70,4 +70,4 @@ namespace machina {
     };
 }
 
-// useless comment
+// use

@@ -4,7 +4,7 @@
 namespace machina {
     class core16 : public device {
         WORD_ regx[8];
-        enum class isa : uint8_t {
+        enum class isa : HWORD_ {
             NOP = 0,
             HLT,
             JMP,

@@ -10,8 +10,7 @@ void mem16::tick() {
     WORD_ mode = this->Receive(this->lane + 0);
     WORD_ data = this->Receive(this->lane + 1);
     WORD_ addr = this->Receive(this->lane + 2);
-    if      (!mode) return;
-    
+    if (!mode) return;
     else if (mode == 1) {
         //write
         this->data[addr] = data;

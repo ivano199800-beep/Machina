@@ -37,8 +37,8 @@ namespace machina {
             Deviceflag |= 1;
         }
         void RegisterPortS2(Port port) {
-            if (port_available) ports.push_back(port);
-            else { port_available = 0; return; } 
+            if (!port_available) return; 
+            ports.push_back(port);
             port_available--;
         }
         // void RegisterType(uint16_t dType) {

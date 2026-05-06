@@ -21,7 +21,7 @@ void mem16::tick() {
     } else {
         std::cout << "mem16 WIP" << '\n';
     }
-    
+    this->Send(this->lane + 0 , 0);
 }
 
 void mem16::start() 

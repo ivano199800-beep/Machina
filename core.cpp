@@ -43,8 +43,8 @@ void core16::tick() {
     }
     if (stage == 1) {
         // fetch the instruction
-        HWORD_ fMode = this->modes[1];
-        std::cout << "fetch mode:" << fMode << std::endl;
+        HWORD_ fMode = 1;// this->modes[1];
+        //std::cout << "fetch mode:" << (unsigned short)fMode << std::endl;
         if (fMode == 0) {
             // Direct Instruction Feed
             this->hiddenReg[0] = this->Receive(2);
@@ -58,7 +58,7 @@ void core16::tick() {
         }
     }
     if (stage == 2) {
-        std::cout << "pending" << std::hex << this->modes[2] << std::endl;
+        //std::cout << "pending " << std::hex << (unsigned short)this->modes[2] << std::endl;
         if (this->modes[2] == 1) {
             if (this->Receive(8) == 2) {
                 return;
@@ -81,8 +81,8 @@ void core16::tick() {
         //WIP
         std::cout <<
         "WIP: the instruction Register for debugging " <<
-        std::hex << this->hiddenReg[0] <<
-        "\nIP = " << this->regx[7] <<
+        std::hex << (unsigned short)this->hiddenReg[0] <<
+        "\nIP = " << (unsigned short)this->regx[7] <<
         std::endl;
         this->regx[7]++;
         stage = 1;

@@ -3,7 +3,7 @@ BUILD   := build
 TARGET  := $(BUILD)/Machina.exe
 RARG    := hello
 
-CC      := g++
+CC      := g++ -g -O0
 # Added -fno-diagnostics-show-caret to CFLAGS for cleaner pragma output
 CFLAGS  := -fno-diagnostics-show-caret -Wall
 INCLUDE := 

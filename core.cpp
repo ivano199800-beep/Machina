@@ -1,5 +1,4 @@
 #include "core.hpp"
-#include <array>
 
             // HWORD_ opcode   = (instr >> 11) & 0x1f;
             // HWORD_ opmode   = (instr >> 8) & 0x7;
@@ -31,10 +30,7 @@
             //         break;
             // }
 using namespace machina;
-using INSTR_ = WORD_;
-static std::array<INSTR_ , 32> instruction_cache;
-static std::array<WORD_ , 16> hiddenReg; 
-static std::array<HWORD_ , 16> modes = {0};
+
 void core16::start() {
     std::cout << "CORE WIP" << std::endl;
 }
@@ -89,4 +85,15 @@ void core16::tick() {
         return;
     } 
 }
+
+
+void core16::set(WORD_ key , HWORD_ value) {
+    switch (key) {
+        case 0:
+            this->modes[1] = value;
+            break;
+        default:
+            break;
+    }
+} 
 

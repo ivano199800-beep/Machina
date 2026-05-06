@@ -2,27 +2,33 @@
 #include "mem16.hpp"
 #include "core.hpp"
 #include <array>
+#include <cstdlib>
 using namespace machina;
 
 int main() {
-    mem16 MMD;
-    device devX;
-    devX.RegisterPortS1(16);
-    MMD.RegisterPortS1(4);
-    std::array<BusLine , 4> MemoryLane;
-    for (auto& line : MemoryLane) {
+    mem16 mem;
+    core16 core;
+    std::array<BusLine , 4> lanes;
+    // Bind Bus
+    core.RegisterPortS1(8);
+    mem.RegisterPortS1(8);
+
+    for (auto& line : lanes) {
         Port p;
         p.line = &line;
-        MMD.RegisterPortS2(p);
-        devX.RegisterPortS2(p);
+        core.RegisterPortS2(p);
+        mem.RegisterPortS2(p);
     }
-    devX.Send(0 , 1);
-    devX.Send(1 , 0xbeaf);
-    devX.Send(2 , 0xdead);
-    MMD.tick();
-    devX.Send(0 , 2);
-    devX.Send(1 , 0xbeaf);
-    devX.Send(2 , 0xdead);
-    MMD.tick();
+    for (int s = 0 ; s < 64 ; s++) {
+        core.Send(0 , 0x1);
+        core.Send(1 , std::rand());
+        core.Send(2 , std::rand() % 256);
+        mem.tick();
+    }
+    for (int s = 0 ; s < 64 ; s++) {
+        core.Send(0 , 0x2);
+        core.Send(2 , std::rand() % 256);
+        mem.tick();
+    }
     return 0;
 }

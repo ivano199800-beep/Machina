@@ -6,7 +6,7 @@
 using namespace machina;
 
 void mem16::tick() {
-    std::cout << "at lane: " << std::hex << (this->lane) << '\n';   
+    //std::cout << "at lane: " << std::hex << (this->lane) << '\n';   
     WORD_ mode = this->Receive(this->lane + 0);
     WORD_ data = this->Receive(this->lane + 1);
     WORD_ addr = this->Receive(this->lane + 2);

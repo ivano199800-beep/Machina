@@ -6,7 +6,7 @@ using namespace machina;
 static WORD_ memoryReg = 0;
 static WORD_ instr = 0;
 static HWORD_ iMode = 0;
-void core::tick() {
+void core16::tick() {
     // port 0 to 7 is for the board
     if (!state) {
         // tell the board its idle

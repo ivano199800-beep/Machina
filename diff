@@ -1,0 +1,168 @@
+
+C:\dev\Machina>git show   
+commit 4ccb515ef4b27d2b3b5ebb3d4aab6c34df1a1cf0 (HEAD -> master)
+Author: unknown <ivano199800@gmail.com>
+Date:   Wed May 6 16:53:24 2026 +0800
+
+    added the structure for Core
+
+diff --git a/core.cpp b/core.cpp
+index e69de29..bdb3a4f 100644
+--- a/core.cpp
++++ b/core.cpp
+@@ -0,0 +1,48 @@
++#include "core.hpp"
++
++
++using namespace machina;
++
++static WORD_ memoryReg = 0;
++static WORD_ instr = 0;
++static HWORD_ iMode = 0;
++void core::tick() {
++    // port 0 to 7 is for the board
++    if (!state) {
++        // tell the board its idle
++        this->Send(0 , 0);
++        this->Send(1 , 1);
++        return;
++    }
++    if (state == 1) {
++        this->Send(0x8 , 2);
++        this->Send(0x9 , 0);
++        this->Send(0xa , this->regx[7]);
++        this->Send(0xb , 0);
++        iMode = 0;
++        state = 3;
++    } else if (state == 2) {
++        if (iMode) {
++            
++        } else if (iMode == 1) {
++            instr = memoryReg;
++            WORD_ opcode = ((HWORD_)instr) << 4;
++            WORD_ opmode = ((HWORD_)instr) & 0xf;
++            WORD_ rMode  = *((HWORD_*)(&instr)[1]) & 3;
++            WORD_ regA   = (*((HWORD_*)(&instr)[1]) >> 2) & 7;
++            WORD_ regB   = (*((HWORD_*)(&instr)[1]) >> 5) & 7;
++            
++            switch (opcode) {
++
++            }
++
++            this->regx[7]++;
++        }
++    } else if (state == 3) {
++            if (this->Receive(0xb)) {
++                memoryReg = this->Receive(0x9);
++                state = 2;
++            } else return;
++    }
++}
++
+diff --git a/core.hpp b/core.hpp
+index 615cd43..4effb60 100644
+--- a/core.hpp
++++ b/core.hpp
+@@ -22,14 +22,16 @@ namespace machina {
+             RET,
+             ADD,
+             SUB,
+-            SFT
++            SFT,
++            RCV,
++            SND
+         };
+         // ra rb rc rd re rf sp ip or 
+         // accumilator base count data extra flag stack_pointer instruction_pointer
+         size_t state = 0; // idle fetch execute pend
+-        // pack the instruction into one WORD_ with the first nibble and bit the opcode and
+-        // the rest of the byte is the mode then the 2 byte is the regIdx or another mode
+-        // the only immediate loading is ldi STR LDM JMP and etc all use a register to operate
++        const char size_of_instr = sizeof(WORD_) * 8;
++        //instruction packing
++        //[opcode][mode][regA][regB] if (op == ldi) + [IMM16]
+         void tick() override;
+     };
+ }
+\ No newline at end of file
+diff --git a/devices.hpp b/devices.hpp
+index e86be09..32fff2b 100644
+--- a/devices.hpp
++++ b/devices.hpp
+@@ -6,7 +6,7 @@
+ #include <map>
+ 
+ typedef uint16_t WORD_;
+-
++typedef uint8_t HWORD_;
+ namespace machina {
+     typedef struct {
+         uint16_t data;
+diff --git a/main.cpp b/main.cpp
+index 6b01c0a..72074ca 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -22,7 +22,7 @@ int main() {
+     MMD.tick();
+     devX.Send(0 , 2);
+     devX.Send(1 , 0xbeaf);
+-    devX.Send(2 , 0xdeaf);
++    devX.Send(2 , 0xdead);
+     MMD.tick();
+     return 0;
+ }
+diff --git a/mem16.cpp b/mem16.cpp
+index 8ba14d7..07121bf 100644
+--- a/mem16.cpp
++++ b/mem16.cpp
+@@ -6,21 +6,26 @@
+ using namespace machina;
+ 
+ void mem16::tick() {
+-    WORD_ mode = this->Receive(0);
+-    WORD_ data = this->Receive(1);
+-    WORD_ addr = this->Receive(2);
++    std::cout << "at lane: " << std::hex << (this->lane) << '\n';   
++    WORD_ mode = this->Receive(this->lane + 0);
++    WORD_ data = this->Receive(this->lane + 1);
++    WORD_ addr = this->Receive(this->lane + 2);
+     if      (!mode) return;
++    
+     else if (mode == 1) {
+         //write
+         this->data[addr] = data;
+-        std::cout << "written " <<  std::hex << data << " at [" << std::hex << addr<< "]\n";
++        std::cout << "written " <<  std::hex << data << " to [" << std::hex << addr<< "]\n";
+     } else if (mode == 2) {
+         this->Send(1 , this->data[addr]);
+-        std::cout << "read " <<  std::hex << this->data[addr] << " at [" << std::hex << addr<< "]\n";
++        std::cout << "read " <<  std::hex << this->data[addr] << " from  [" << std::hex << addr<< "]\n";
+     } else {
+         std::cout << "mem16 WIP" << '\n';
+     }
+     
+ }
+ 
+-void mem16::start() {}
+\ No newline at end of file
++void mem16::start() 
++{
++    std::cout << "mem16 WIP" << '\n';
++}
+\ No newline at end of file
+diff --git a/mem16.hpp b/mem16.hpp
+index 409cde0..b46c2a9 100644
+--- a/mem16.hpp
++++ b/mem16.hpp
+@@ -7,7 +7,8 @@
+ namespace machina {
+     class mem16 : public device {
+         std::array<uint16_t , 0x10000> data;
+-        public:
++        size_t lane = 0; // not implemented
++            public:
+             void tick() override;
+             void start() override;
+     };
+
+C:\dev\Machina>

@@ -26,11 +26,11 @@ void core::tick() {
             
         } else if (iMode == 1) {
             instr = memoryReg;
-            WORD_ opcode = ((HWORD_)instr) << 4;
-            WORD_ opmode = ((HWORD_)instr) & 0xf;
-            WORD_ rMode  = *((HWORD_*)(&instr)[1]) & 3;
-            WORD_ regA   = (*((HWORD_*)(&instr)[1]) >> 2) & 7;
-            WORD_ regB   = (*((HWORD_*)(&instr)[1]) >> 5) & 7;
+            HWORD_ opcode = (instr >> 12) & 0xf;
+            HWORD_ opmode = (instr >> 8) & 0xf;
+            HWORD_ rMode  = (instr >> 5) & 0x7;
+            HWORD_ regA   = (instr >> 2) & 0x7;
+            HWORD_ regB   = instr & 0x3;
             
             switch (opcode) {
 

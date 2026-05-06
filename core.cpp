@@ -2,7 +2,7 @@
 
 
 using namespace machina;
-
+static HWORD_ cMode = 0; // direct signal Feed
 static WORD_ memoryReg = 0;
 static WORD_ instr = 0;
 static HWORD_ iMode = 0;
@@ -20,8 +20,8 @@ void core16::tick() {
         iMode = 0;
         state = 3;
     } else if (state == 2) {
-        if (iMode) {
-            
+        if (iMode == 2) {
+
         } else if (iMode == 1) {
             instr = memoryReg;
             HWORD_ opcode   = (instr >> 11) & 0x1f;

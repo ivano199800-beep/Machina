@@ -81,7 +81,10 @@ void core16::tick() {
     } else if (stage == 3) {
         // execute stage
         //WIP
-        std::cout << "WIP" << std::endl;
+        std::cout <<
+        "WIP the instruction Register for debugging" <<
+        std::hex << hiddenReg[0] <<
+        std::endl;
         this->regx[7]++;
         return;
     } 

@@ -37,7 +37,7 @@ $(BUILD)/%.o: %.cpp
 # Clean up
 clean:
 	@if exist "$(BUILD)" rd /s /q "$(BUILD)"
-	@del *.o > out
+	@del *.o > out.txt
 	@echo Cleaned $(BUILD) directory
 	@cls
 

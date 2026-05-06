@@ -33,5 +33,6 @@ namespace machina {
         //instruction packing
         //[opcode][mode][regA][regB] if (op == ldi) + [IMM16]
         void tick() override;
+        void start() override;
     };
 }

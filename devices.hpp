@@ -69,3 +69,5 @@ namespace machina {
         //    static std::map<uint16_t> deviceMap;
     };
 }
+
+// useless comment

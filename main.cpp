@@ -29,6 +29,12 @@ int main() {
         core.RegisterPortS2(p);
     }
     // do something
-    core.tick();
+
+    core.set(0 , 0);
+    devX.Send(1, 0); // start the core
+    for (int i = 0 ; i < 0xffff ; i++) {
+        core.tick();
+        mem.tick();
+    }
     return 0;
 }

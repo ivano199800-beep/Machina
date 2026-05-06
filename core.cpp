@@ -24,11 +24,11 @@ void core16::tick() {
             
         } else if (iMode == 1) {
             instr = memoryReg;
-            HWORD_ opcode = (instr >> 11) & 0x1f;
-            HWORD_ opmode = (instr >> 8) & 0x7;
-            HWORD_ rMode  = (instr >> 5) & 0x7;
-            HWORD_ regA   = (instr >> 2) & 0x3;
-            HWORD_ regB   = instr & 0x3;
+            HWORD_ opcode   = (instr >> 11) & 0x1f;
+            HWORD_ opmode   = (instr >> 8) & 0x7;
+            HWORD_ regB     = (instr >> 5) & 0x7;
+            HWORD_ regA     = (instr >> 2) & 0x3;
+            HWORD_ rMode    = instr & 0x3;
             
             switch ((isa)opcode) {
                 case isa::NOP:

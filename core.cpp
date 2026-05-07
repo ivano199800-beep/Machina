@@ -16,7 +16,7 @@ void core16::tick() {
     }
     if (stage == 1) {
         // fetch the instruction
-        HWORD_ fMode = this->modes[1];
+        HWORD_ fMode = 1; //this->modes[1];
         //std::cout << "fetch mode:" << (unsigned short)fMode << std::endl;
         if (fMode == 0) {
             // Direct Instruction Feed
@@ -53,16 +53,21 @@ void core16::tick() {
         // execute stage
         //WIP
         std::cout <<
-        "WIP: the instruction Register for debugging " <<
-        std::hex << (unsigned short)this->hiddenReg[0] <<
-        "\nIP = " << (unsigned short)this->regx[7] <<
-        std::endl;
-        WORD_ instr = this->regx[7];
+        "WIP: the instruction Register for debugging " << (int)this->hiddenReg[0] << '\n' <<
+        "IP = " << (int)this->regx[7] << std::endl;
+        WORD_ instr = this->hiddenReg[0];
         HWORD_ opcode   = (instr >> 11) & 0x1f;
         HWORD_ opmode   = (instr >> 8) & 0x7;
         HWORD_ regB     = (instr >> 5) & 0x7;
         HWORD_ regA     = (instr >> 2) & 0x7;
         HWORD_ rMode    = instr & 0x3;
+
+        std::cout << "opcode " << (int)opcode << '\n' <<
+        "opmode " << (int)opmode << '\n' <<
+        "regB " << (int)regB << '\n' <<
+        "regA " << (int)regA << '\n' <<
+        "rMode " <<  (int)rMode << '\n';
+
         switch ((isa)opcode) {
             case isa::NOP:
                 break;

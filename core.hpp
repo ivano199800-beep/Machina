@@ -31,7 +31,7 @@ namespace machina {
         // accumilator base count data extra flag stack_pointer instruction_pointer
         std::array<INSTR_ , 32> instruction_cache;
         std::array<WORD_ , 16> hiddenReg; 
-        std::array<HWORD_ , 16> modes = {0};
+        std::array<HWORD_ , 32> modes = {0};
         WORD_ stage = 0;
         const char size_of_instr = sizeof(WORD_) * 8;
         //instruction packing

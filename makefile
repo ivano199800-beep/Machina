@@ -1,48 +1,51 @@
-# --- Configuration ---
-BUILD   := build
-TARGET  := $(BUILD)/Machina.exe
-RARG    := hello
+# ================================================
+# Machina - Makefile (Windows CMD optimized)
+# ================================================
 
-CC      := g++ -g -O0
-# Added -fno-diagnostics-show-caret to CFLAGS for cleaner pragma output
-CFLAGS  := -fno-diagnostics-show-caret -Wall
-INCLUDE := 
-LIB     := -L.
-LIBS    := 
+BUILD_DIR   := build
+TARGET      := $(BUILD_DIR)/Machina.exe
 
-# --- Source & Objects ---
-# This ensures .o files are tracked inside the $(BUILD) directory
-SRC     := $(wildcard *.cpp)
-OBJ     := $(SRC:%.cpp=$(BUILD)/%.o)
+CXX         := g++
+CXXFLAGS    := -g -O0 -std=c++17 -Wall -Wextra
 
-# --- Rules ---
+SRC         := $(wildcard *.cpp)
+OBJ         := $(SRC:%.cpp=$(BUILD_DIR)/%.o)
 
-all: $(BUILD) $(TARGET)
-	@echo done linking and compiling
+.PHONY: all clean run debug
 
-# Create build directory if it doesn't exist
-$(BUILD):
-	@if not exist "$(BUILD)" mkdir "$(BUILD)"
+all: dirs $(TARGET)
 
-# Link the executable
+# Create build directory
+dirs:
+	@if not exist "$(BUILD_DIR)" mkdir "$(BUILD_DIR)"
+
+# Linking
 $(TARGET): $(OBJ)
 	@echo Linking $@
-	@$(CC) -o $@ $(OBJ) $(LIB) $(LIBS)
+	@$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Compile .c files to .o files in the build directory
-$(BUILD)/%.o: %.cpp
+# Compilation
+$(BUILD_DIR)/%.o: %.cpp
 	@echo Compiling $<
-	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean up
+# Clean
 clean:
-	@if exist "$(BUILD)" rd /s /q "$(BUILD)"
-	@del *.o > out.txt
-	@echo Cleaned $(BUILD) directory
-	@cls
+	@if exist "$(BUILD_DIR)" rmdir /s /q "$(BUILD_DIR)"
+	@del /q *.o 2>nul
+	@echo Build files cleaned.
 
-# Run the target
+# Run
 run: all
-	@echo running $(TARGET)
+	@echo Running...
 	@echo -----------------------------------
-	@./$(TARGET) $(RARG)
+	@$(TARGET)
+
+# Show debug info
+debug:
+	@echo Sources: $(SRC)
+	@echo Objects: $(OBJ)
+	@echo Target : $(TARGET)
+
+# Quick rebuild
+rebuild: clean all

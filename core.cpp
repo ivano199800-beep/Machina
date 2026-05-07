@@ -16,7 +16,7 @@ void core16::tick() {
     }
     if (stage == 1) {
         // fetch the instruction
-        HWORD_ fMode = 1;// this->modes[1];
+        HWORD_ fMode = this->modes[1];
         //std::cout << "fetch mode:" << (unsigned short)fMode << std::endl;
         if (fMode == 0) {
             // Direct Instruction Feed
@@ -63,7 +63,6 @@ void core16::tick() {
         HWORD_ regB     = (instr >> 5) & 0x7;
         HWORD_ regA     = (instr >> 2) & 0x7;
         HWORD_ rMode    = instr & 0x3;
-
         switch ((isa)opcode) {
             case isa::NOP:
                 break;
@@ -72,10 +71,10 @@ void core16::tick() {
                 this->Send(1 , 1);
                 break;
             case isa::ADD:
-                this->regx[regB] += this->regx[regB];
+                this->regx[regB] += this->regx[regA];
                 break;
             case isa::SUB:
-                this->regx[regB] -= this->regx[regB];
+                this->regx[regB] -= this->regx[regA];
                 break;
             case isa::SND:
                 this->Send(regx[regB] , regx[regA]);

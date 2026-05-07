@@ -35,7 +35,7 @@ int main() {
         mem.Send(2,i);
         mem.tick();
     }
-    core.set(0 , 0);
+    core.set(1 , 0);
     devX.Send(1, 0); // start the core
     for (int i = 0 ; i < 32 ; i++) {
         core.tick();

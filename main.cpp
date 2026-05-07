@@ -28,18 +28,32 @@ int main() {
         mem.RegisterPortS2(p);
         core.RegisterPortS2(p);
     }
-    // do something
-    for (int i = 0 ; i < 32 ; i++ ) {
-        mem.Send(0,1);
-        mem.Send(1,std::rand() & 0xffff);
-        mem.Send(2,i);
+
+
+    std::array<INSTR_ , 0x6> program = {
+        core.assemble((HWORD_)core16::isa::LDI , 0 , 0 , 0, 0),
+        9090,
+        core.assemble((HWORD_)core16::isa::LDI , 1 , 0 , 0, 0),
+        7,
+        core.assemble((HWORD_)core16::isa::SND , 0 , 1 , 0, 0),
+        core.assemble((HWORD_)core16::isa::HLT , 0 , 0 , 0, 0),
+    };
+    int i = 0;
+    for (auto& s : program) {
+        mem.Send(0, 1);
+        mem.Send(1, s);
+        mem.Send(2 , i);
         mem.tick();
+        i++;
     }
+    core.set(4 , 0);
     core.set(1 , 1);
     devX.Send(1, 0); // start the core
-    for (int i = 0 ; i < 32 ; i++) {
+    std::cout << "-------------loop starts here" <<  std::endl;
+    for (int i = 0 ; i <15 * 5 ; i++) {
         core.tick();
         mem.tick();
     }
+    std::cout << "devX Signal: " << (int)devX.Receive(7) << std::endl;
     return 0;
 }

@@ -14,7 +14,7 @@ void core16::tick() {
         stage = 1;
         return;
     }
-    if (stage == 1) {
+    else if (stage == 1) {
         // fetch the instruction
         HWORD_ fMode = 1; //this->modes[1];
         //std::cout << "fetch mode:" << (unsigned short)fMode << std::endl;
@@ -30,8 +30,8 @@ void core16::tick() {
             this->modes[2] = 1;
         }
     }
-    if (stage == 2) {
-        //std::cout << "pending " << std::hex << (unsigned short)this->modes[2] << std::endl;
+    else if (stage == 2) {
+        std::cout << "pending " << std::hex << (int)this->modes[2] << std::endl;
         if (this->modes[2] == 1) {
             if (this->Receive(8) == 2) {
                 return;
@@ -44,7 +44,7 @@ void core16::tick() {
             if (this->Receive(8) == 2) {
                 return;
             } else {
-                this->hiddenReg[1] = this->Receive(9);
+                this->hiddenReg[2] = this->Receive(9);
                 this->modes[3] = 1;
                 stage = 3;
             }
@@ -55,14 +55,35 @@ void core16::tick() {
         std::cout <<
         "WIP: the instruction Register for debugging " << (int)this->hiddenReg[0] << '\n' <<
         "IP = " << (int)this->regx[7] << std::endl;
-        WORD_ instr = this->hiddenReg[0];
+        INSTR_ instr = this->hiddenReg[0];
         HWORD_ opcode   = (instr >> 11) & 0x1f;
         HWORD_ opmode   = (instr >> 8) & 0x7;
         HWORD_ regB     = (instr >> 5) & 0x7;
         HWORD_ regA     = (instr >> 2) & 0x7;
         HWORD_ rMode    = instr & 0x3;
-
-        std::cout << "opcode " << (int)opcode << '\n' <<
+        std::array<char* , 32> ops {
+            "NOP",
+            "HLT",
+            "JMP",
+            "JZE",
+            "JOF",
+            "JNE",
+            "JCA",
+            "LDI",
+            "LDM",
+            "LDR",
+            "STR",
+            "PSH",    
+            "POP",
+            "CAL",
+            "RET",
+            "ADD",
+            "SUB",
+            "SFT",
+            "RCV",
+            "SND"
+        };
+        std::cout << "opcode " << ops[(int)opcode] << '\n' <<
         "opmode " << (int)opmode << '\n' <<
         "regB " << (int)regB << '\n' <<
         "regA " << (int)regA << '\n' <<
@@ -87,6 +108,30 @@ void core16::tick() {
             case isa::RCV:
                 regx[regA] = this->Receive(regx[regB]);
                 break;
+            case isa::LDI:
+                if (0)//!this->modes[4]) 
+                {
+                    this->regx[opmode] = ((HWORD_*)&instr)[1];
+                    break;
+                } else {
+                    if (this->modes[3]) {
+                        // put the data to the register
+                        this->regx[opmode] = this->hiddenReg[2];
+
+                        this->modes[3] = 0;
+                        this->modes[2] = 0; 
+                    } else {
+                        //
+                        this->regx[7] += 1;
+                        this->hiddenReg[2] = this->regx[7];
+                        this->hiddenReg[3] = opmode;
+                        this->modes[2] =  2;
+                        stage = 4;
+                        return;
+                    }
+                    break;
+                }
+                break;
             default:
                 break;
             }
@@ -94,12 +139,21 @@ void core16::tick() {
         this->regx[7]++;
         stage = 1;
         return;
-    } 
+    } else if (stage == 4) {
+        // request data;
+        auto addr = this->hiddenReg[2];
+        auto dest = this->hiddenReg[3];
+        this->Send(8 ,2);
+        this->Send(9,0);
+        this->Send(10 , addr);
+        stage = 2;
+        this->modes[2] = 2 ;
+    }
 }
 
 
 void core16::set(HWORD_ key , HWORD_ value) {
-    this->modes[key & 0x20] = value;
+    this->modes[key % 0x20] = value;
     return;
 } 
 

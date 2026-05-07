@@ -39,6 +39,6 @@ namespace machina {
         public:
         void tick() override;
         void start() override;
-        void set(WORD_ key , HWORD_ value);
+        void set(HWORD_ key , HWORD_ value);
     };
 }

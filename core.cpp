@@ -10,7 +10,8 @@ void core16::start() {
 void core16::tick() {
     auto& stage = modes[0];
     if (stage == 0) { 
-        if (this->Receive(1)) return;
+        std::cout << "halted" << std::endl;
+        if (!this->Receive(1)) return;
         stage = 1;
         return;
     }
@@ -93,8 +94,9 @@ void core16::tick() {
             case isa::NOP:
                 break;
             case isa::HLT:                    
+                stage = 0;
                 this->Send(0 , 1);
-                this->Send(1 , 1);
+                this->Send(1 , 0);
                 break;
             case isa::ADD:
                 this->regx[regB] += this->regx[regA];

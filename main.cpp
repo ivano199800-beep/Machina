@@ -30,11 +30,11 @@ int main() {
     }
 
 
-    std::array<INSTR_ , 0x6> program = {
+    std::array<INSTR_ , 0xf> program = {
         core.assemble((HWORD_)core16::isa::LDI , 0 , 0 , 0, 0),
-        9090,
+        0x9090,
         core.assemble((HWORD_)core16::isa::LDI , 1 , 0 , 0, 0),
-        7,
+        0x7,
         core.assemble((HWORD_)core16::isa::SND , 0 , 1 , 0, 0),
         core.assemble((HWORD_)core16::isa::HLT , 0 , 0 , 0, 0),
     };
@@ -48,11 +48,12 @@ int main() {
     }
     core.set(4 , 0);
     core.set(1 , 1);
-    devX.Send(1, 0); // start the core
+    devX.Send(1, 1); // start the core
     std::cout << "-------------loop starts here" <<  std::endl;
     for (int i = 0 ; i <15 * 5 ; i++) {
         core.tick();
         mem.tick();
+        if (!devX.Receive(1)) break; 
     }
     std::cout << "devX Signal: " << (int)devX.Receive(7) << std::endl;
     return 0;

@@ -58,15 +58,14 @@ namespace machina {
             }
             this->did[16] = 0;
         }
-        //static void RegisterType(std::string& device);
+        // static void RegisterType(std::string& device);
         virtual void tick() {
             std::cout << "WIP" << '\n';
         }
         virtual void start() {
             std::cout << "WIP" << '\n';
         };
-        private: // static stuff
-        //    static std::map<uint16_t> deviceMap;
+        private:
     };
 }
 

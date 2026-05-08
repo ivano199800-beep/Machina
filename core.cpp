@@ -63,13 +63,14 @@ void core16::tick() {
         HWORD_ regA     = (instr >> 2) & 0x7;
         HWORD_ rMode    = instr & 0x3;
         std::array<const char* , 32> ops {
-            "NOP",
-            "HLT",
-            "JMP",
-            "JZE",
-            "JOF",
+            "NOP", // 1
+            "HLT", // 1
+            "JMP", // 1
+            "JZE", // 1 
+            "JEQ",
             "JNE",
-            "JCA",
+            "JLT",
+            "JGT",
             "LDI",
             "LDM",
             "LDR",
@@ -80,6 +81,7 @@ void core16::tick() {
             "RET",
             "ADD",
             "SUB",
+            "CMP",
             "SFT",
             "RCV",
             "SND"
@@ -100,9 +102,11 @@ void core16::tick() {
                 break;
             case isa::ADD:
                 this->regx[regB] += this->regx[regA];
+                if (!this->regx[regB]) this->regx[5] |= 1;
                 break;
             case isa::SUB:
                 this->regx[regB] -= this->regx[regA];
+                if (!this->regx[regB]) this->regx[5] |= 1;
                 break;
             case isa::SND:
                 this->Send(regx[regB] , regx[regA]);
@@ -151,11 +155,96 @@ void core16::tick() {
                 this->Send(9 , this->regx[regA]);
                 this->Send(10 , this->regx[regB]);
                 break;
-            default:
+            case isa::LDR:
+                this->regx[regB] = this->regx[regA];
+                break;
+            case isa::JMP: {
+                int mode = opmode;
+                if (mode) {
+                    this->regx[7] += (signed char)(instr & 0xff);
+                } else {
+                    this->regx[7] = this->regx[regA];
+                }
+                goto end;
+            }
+            case isa::JZE: {
+                int mode = opmode;
+                if (mode) {
+                    if (this->regx[5] & 1) this->regx[7] += (signed char)(instr & 0xff);
+                    else break;
+                    goto end;
+                } else {
+                    if (this->regx[5] & 1) this->regx[7] = this->regx[regA];
+                    else break;
+                    goto end;
+                }
                 break;
             }
-
+            case isa::JEQ: {
+                int mode = opmode;
+                if (mode) {
+                    if (this->regx[5] & 2) this->regx[7] += (signed char)(instr & 0xff);
+                    else break;
+                    goto end;
+                } else {
+                    if (this->regx[5] & 2) this->regx[7] = this->regx[regA];
+                    else break;
+                    goto end;
+                }
+            }
+            case isa::JNE: {
+                int mode = opmode;
+                if (mode) {
+                    if (! (this->regx[5] & 2)) this->regx[7] += (signed char)(instr & 0xff);
+                    else break;
+                    goto end;
+                } else {
+                    if (!(this->regx[5] & 2)) this->regx[7] = this->regx[regA];
+                    else break;
+                    goto end;
+                }
+            }
+            case isa::JLT: {
+                if (this->regx[5] & 2) break;
+                int mode = opmode;
+                if (mode) {
+                    if (this->regx[5] & 4) this->regx[7] += (signed char)(instr & 0xff);
+                    else break;
+                    goto end;
+                } else {
+                    if (this->regx[5] & 4) this->regx[7] = this->regx[regA];
+                    else break;
+                    goto end;
+                }
+            }
+            case isa::JGT: {
+                if (this->regx[5] & 2) break;
+                int mode = opmode;
+                if (mode) {
+                    if (!(this->regx[5] & 4)) this->regx[7] += (signed char)(instr & 0xff);
+                    else break;
+                    goto end;
+                } else {
+                    if (!(this->regx[5] & 4)) this->regx[7] = this->regx[regA];
+                    else break;
+                    goto end;
+                }
+            }
+            case isa::CMP: {
+                auto& reg1 = this->regx[regA];
+                auto& reg2 = this->regx[regB];
+                auto& flag = this->regx[5];
+                flag = 0;
+                if (reg1 == reg2) flag |= 2;
+                if (reg1 < reg2) flag |= 4;
+                break;
+            }
+            default: {
+                break;
+            }
+            }
         this->regx[7]++;
+        end:
         stage = 1;
         return;
     } else if (stage == 4) {

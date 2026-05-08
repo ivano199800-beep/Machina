@@ -29,16 +29,22 @@ int main() {
         core.RegisterPortS2(p);
     }
 
-    std::array<INSTR_, 0xf> program = {
-    core.assemble((HWORD_)core16::isa::LDI , 0 , 0 , 0, 0),
-    3,
-    core.assemble((HWORD_)core16::isa::LDR , 0 , 1 , 0, 0),
-    core.assemble((HWORD_)core16::isa::ADD , 0 , 0 , 1, 0),
-    core.assemble((HWORD_)core16::isa::LDI , 0 , 2 , 0, 0),
-    7,
-    core.assemble((HWORD_)core16::isa::SND , 0 , 2 , 0, 0),
-    core.assemble((HWORD_)core16::isa::HLT , 0 , 0 , 0, 0)
-};
+    std::array<INSTR_ , 16> program = {
+        core.assemble((HWORD_)core16::isa::LDI , 0, 4, 0, 0),
+        7,
+        core.assemble((HWORD_)core16::isa::LDI , 0, 1, 0, 0),
+        10,
+        core.assemble((HWORD_)core16::isa::LDI , 0, 0, 0, 0),
+        1,
+        core.assemble((HWORD_)core16::isa::LDI , 0, 3, 0, 0),
+        0,
+        core.assemble((HWORD_)core16::isa::SUB , 0, 1, 0 ,0),
+        core.assemble((HWORD_)core16::isa::SND , 1, 4, 1 ,0),
+        core.assemble((HWORD_)core16::isa::CMP , 0 , 3 , 1 , 0),
+        core.assemble((HWORD_)core16::isa::JNE, 1, 7, 7, 0),
+        core.assemble((HWORD_)core16::isa::HLT , 0, 0, 0, 0)
+    };
+
 
     int i = 0;
     for (auto& s : program) {
@@ -55,8 +61,9 @@ int main() {
     for (int i = 0 ; i <15 * 5 ; i++) {
         core.tick();
         mem.tick();
+        std::cout << "devX Signal: " << (int)devX.Receive(7) << std::endl;
         if (!devX.Receive(1)) break; 
     }
-    std::cout << "devX Signal: " << (int)devX.Receive(7) << std::endl;
+    
     return 0;
 }

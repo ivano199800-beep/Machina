@@ -47,10 +47,13 @@ namespace machina {
         void Send(size_t port_num , WORD_ data) {
             if (port_num >= port_count) return;
             this->ports[port_num].line->data = data;
+            std::cout << "Sent:" << (int)data << " to port " << port_num << std::endl;
         }
         uint16_t Receive(size_t port_num) {
             if (port_num >= port_count) return 0;
-            return this->ports[port_num].line->data;
+            int data = this->ports[port_num].line->data;
+            std::cout << "Recieved:" << (int)data << " from port " << port_num << std::endl;
+            return data;
         }
         void SetID(const std::string& s) {
             for (size_t i = 0 ; i < 16 && i < s.length() ; i++) {

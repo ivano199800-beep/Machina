@@ -8,10 +8,6 @@ void core16::start() {
     std::cout << "CORE WIP" << std::endl;
 }
 void core16::tick() {
-    // std::cout << "core--tick----------------------\n";
-    // for (auto& s: this->regx) {
-    //     std::cout << "reg: " << (int)s << std::endl;
-    // }
     auto& stage = modes[0];
     if (stage == 0) { 
         std::cout << "halted" << std::endl;
@@ -36,7 +32,7 @@ void core16::tick() {
         }
     }
     else if (stage == 2) {
-        // std::cout << "pending " << std::hex << (int)this->modes[2] << std::endl;
+        std::cout << "pending " << std::hex << (int)this->modes[2] << std::endl;
         if (this->modes[2] == 1) {
             if (this->Receive(8) == 2) {
                 return;
@@ -57,42 +53,42 @@ void core16::tick() {
     } else if (stage == 3) {
         // execute stage
         //WIP
-        //std::cout <<
-        // "WIP: the instruction Register for debugging " << (int)this->hiddenReg[0] << '\n' <<
-        // "IP = " << (int)this->regx[7] << std::endl;
+        std::cout <<
+        "WIP: the instruction Register for debugging " << (int)this->hiddenReg[0] << '\n' <<
+        "IP = " << (int)this->regx[7] << std::endl;
         INSTR_ instr = this->hiddenReg[0];
         HWORD_ opcode   = (instr >> 11) & 0x1f;
         HWORD_ opmode   = (instr >> 8) & 0x7;
         HWORD_ regB     = (instr >> 5) & 0x7;
         HWORD_ regA     = (instr >> 2) & 0x7;
         HWORD_ rMode    = instr & 0x3;
-        // std::array<const char* , 32> ops {
-        //     "NOP",
-        //     "HLT",
-        //     "JMP",
-        //     "JZE",
-        //     "JOF",
-        //     "JNE",
-        //     "JCA",
-        //     "LDI",
-        //     "LDM",
-        //     "LDR",
-        //     "STR",
-        //     "PSH",    
-        //     "POP",
-        //     "CAL",
-        //     "RET",
-        //     "ADD",
-        //     "SUB",
-        //     "SFT",
-        //     "RCV",
-        //     "SND"
-        // };
-        // std::cout << "opcode " << ops[(int)opcode] << '\n' <<
-        // "opmode " << (int)opmode << '\n' <<
-        // "regB " << (int)regB << '\n' <<
-        // "regA " << (int)regA << '\n' <<
-        // "rMode " <<  (int)rMode << '\n';
+        std::array<const char* , 32> ops {
+            "NOP",
+            "HLT",
+            "JMP",
+            "JZE",
+            "JOF",
+            "JNE",
+            "JCA",
+            "LDI",
+            "LDM",
+            "LDR",
+            "STR",
+            "PSH",    
+            "POP",
+            "CAL",
+            "RET",
+            "ADD",
+            "SUB",
+            "SFT",
+            "RCV",
+            "SND"
+        };
+        std::cout << "opcode " << ops[(int)opcode] << '\n' <<
+        "opmode " << (int)opmode << '\n' <<
+        "regB " << (int)regB << '\n' <<
+        "regA " << (int)regA << '\n' <<
+        "rMode " <<  (int)rMode << '\n';
 
         switch ((isa)opcode) {
             case isa::NOP:
@@ -122,7 +118,7 @@ void core16::tick() {
                 } else {
                     if (this->modes[3]) {
                         // put the data to the register
-                        this->regx[regB] = this->hiddenReg[2];
+                        this->regx[opmode] = this->hiddenReg[2];
 
                         this->modes[3] = 0;
                         this->modes[2] = 0; 
@@ -130,7 +126,7 @@ void core16::tick() {
                         //
                         this->regx[7] += 1;
                         this->hiddenReg[2] = this->regx[7];
-                        this->hiddenReg[3] = regB;
+                        this->hiddenReg[3] = opmode;
                         this->modes[2] =  2;
                         stage = 4;
                         return;
@@ -152,13 +148,9 @@ void core16::tick() {
                 break;
             case isa::STR:
                 this->Send(8 , 1);
-                this->Send(9 , this->regx[regB]);
-                this->Send(10 , this->regx[regA]);
+                this->Send(9 , this->regx[regA]);
+                this->Send(10 , this->regx[regB]);
                 break;
-            case isa::LDR:
-                this->regx[regB] = this->regx[regA];
-                break;
-            
             default:
                 break;
             }

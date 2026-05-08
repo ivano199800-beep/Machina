@@ -67,24 +67,24 @@ void core16::tick() {
             "HLT", // 1
             "JMP", // 1
             "JZE", // 1 
-            "JEQ",
-            "JNE",
-            "JLT",
-            "JGT",
-            "LDI",
-            "LDM",
-            "LDR",
-            "STR",
-            "PSH",    
+            "JEQ", // 1
+            "JNE", // 1
+            "JLT", // 1
+            "JGT", // 1
+            "LDI", // 1
+            "LDM", // 1
+            "LDR", // 1
+            "STR", // 1
+            "PSH",  
             "POP",
             "CAL",
             "RET",
-            "ADD",
-            "SUB",
-            "CMP",
+            "ADD", // 1
+            "SUB", // 1
+            "CMP", // 1
             "SFT",
-            "RCV",
-            "SND"
+            "RCV", // 1
+            "SND" // 1
         };
         std::cout << "opcode " << ops[(int)opcode] << '\n' <<
         "opmode " << (int)opmode << '\n' <<
@@ -136,7 +136,7 @@ void core16::tick() {
                         return;
                     }
                     break;
-                }
+                
                 break;
             case isa::LDM:
                 if (this->modes[3]) {

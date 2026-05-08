@@ -2,3 +2,5 @@ build/*
 *.diff
 out.txt
 *.py
+.git
+*.txt

@@ -1,5 +1,5 @@
 # ================================================
-# Machina - Makefile (Windows CMD optimized)
+# Machina - Makefile (Windows CMD optimized) copied from GROK
 # ================================================
 
 BUILD_DIR   := build
@@ -33,6 +33,7 @@ $(BUILD_DIR)/%.o: %.cpp
 clean:
 	@if exist "$(BUILD_DIR)" rmdir /s /q "$(BUILD_DIR)"
 	@del /q *.o 2>nul
+	@cls
 	@echo Build files cleaned.
 
 # Run

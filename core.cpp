@@ -8,6 +8,10 @@ void core16::start() {
     std::cout << "CORE WIP" << std::endl;
 }
 void core16::tick() {
+    std::cout << "core--tick----------------------\n";
+    for (auto& s: this->regx) {
+        std::cout << "reg: " << (int)s << std::endl;
+    }
     auto& stage = modes[0];
     if (stage == 0) { 
         std::cout << "halted" << std::endl;
@@ -62,7 +66,7 @@ void core16::tick() {
         HWORD_ regB     = (instr >> 5) & 0x7;
         HWORD_ regA     = (instr >> 2) & 0x7;
         HWORD_ rMode    = instr & 0x3;
-        std::array<char* , 32> ops {
+        std::array<const char* , 32> ops {
             "NOP",
             "HLT",
             "JMP",
@@ -118,7 +122,7 @@ void core16::tick() {
                 } else {
                     if (this->modes[3]) {
                         // put the data to the register
-                        this->regx[opmode] = this->hiddenReg[2];
+                        this->regx[regB] = this->hiddenReg[2];
 
                         this->modes[3] = 0;
                         this->modes[2] = 0; 
@@ -126,7 +130,7 @@ void core16::tick() {
                         //
                         this->regx[7] += 1;
                         this->hiddenReg[2] = this->regx[7];
-                        this->hiddenReg[3] = opmode;
+                        this->hiddenReg[3] = regB;
                         this->modes[2] =  2;
                         stage = 4;
                         return;
@@ -134,6 +138,27 @@ void core16::tick() {
                     break;
                 }
                 break;
+            case isa::LDM:
+                if (this->modes[3]) {
+                    this->regx[regB] = this->hiddenReg[2];
+                    this->modes[3] = 0;
+                    this->modes[2] = 0;
+                } else {
+                    this->hiddenReg[2] = this->regx[regA];
+                    this->modes[2] = 2;
+                    stage = 4;
+                    return;
+                }
+                break;
+            case isa::STR:
+                this->Send(8 , 1);
+                this->Send(9 , this->regx[regB]);
+                this->Send(10 , this->regx[regA]);
+                break;
+            case isa::LDR:
+                this->regx[regB] = this->regx[regA];
+                break;
+            
             default:
                 break;
             }
@@ -144,7 +169,7 @@ void core16::tick() {
     } else if (stage == 4) {
         // request data;
         auto addr = this->hiddenReg[2];
-        auto dest = this->hiddenReg[3];
+        //auto dest = this->hiddenReg[3];
         this->Send(8 ,2);
         this->Send(9,0);
         this->Send(10 , addr);

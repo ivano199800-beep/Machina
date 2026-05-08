@@ -29,15 +29,17 @@ int main() {
         core.RegisterPortS2(p);
     }
 
+    std::array<INSTR_, 0xf> program = {
+    core.assemble((HWORD_)core16::isa::LDI , 0 , 0 , 0, 0),
+    3,
+    core.assemble((HWORD_)core16::isa::LDR , 0 , 1 , 0, 0),
+    core.assemble((HWORD_)core16::isa::ADD , 0 , 0 , 1, 0),
+    core.assemble((HWORD_)core16::isa::LDI , 0 , 2 , 0, 0),
+    7,
+    core.assemble((HWORD_)core16::isa::SND , 0 , 2 , 0, 0),
+    core.assemble((HWORD_)core16::isa::HLT , 0 , 0 , 0, 0)
+};
 
-    std::array<INSTR_ , 0xf> program = {
-        core.assemble((HWORD_)core16::isa::LDI , 0 , 0 , 0, 0),
-        0x9090,
-        core.assemble((HWORD_)core16::isa::LDI , 1 , 0 , 0, 0),
-        0x7,
-        core.assemble((HWORD_)core16::isa::SND , 0 , 1 , 0, 0),
-        core.assemble((HWORD_)core16::isa::HLT , 0 , 0 , 0, 0),
-    };
     int i = 0;
     for (auto& s : program) {
         mem.Send(0, 1);

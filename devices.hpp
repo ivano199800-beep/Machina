@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
-
+#include <cstring>
 typedef uint16_t WORD_;
 typedef uint8_t HWORD_;
 namespace machina {
@@ -30,6 +30,13 @@ namespace machina {
                 did[i] = 0;
             }
         }
+        void RegisterDID(const std::string& name) {
+            if (this->Deviceflag & 2) return; 
+            const char* s = name.c_str();
+            strncpy(this->did , s, 16);
+            this->did[16] = 0;
+            this->Deviceflag |= 2;
+        }
         void RegisterPortS1(size_t port_count) {
             if (Deviceflag & 1) return;
             this->port_available = port_count;
@@ -47,20 +54,20 @@ namespace machina {
         void Send(size_t port_num , WORD_ data) {
             if (port_num >= port_count) return;
             this->ports[port_num].line->data = data;
-            std::cout << "Sent:" << (int)data << " to port " << port_num << std::endl;
+            std::cout << this->did << ": 0x" << std::hex << (int)data << " >  P0x" << std::hex << port_num << std::endl;
         }
         uint16_t Receive(size_t port_num) {
             if (port_num >= port_count) return 0;
             int data = this->ports[port_num].line->data;
-            std::cout << "Recieved:" << (int)data << " from port " << port_num << std::endl;
+            std::cout << this->did << ": 0x" << std::hex << (int)data << " < P0x" <<  std::hex << port_num << std::endl;
             return data;
         }
-        void SetID(const std::string& s) {
-            for (size_t i = 0 ; i < 16 && i < s.length() ; i++) {
-                this->did[i]  = s[i];
-            }
-            this->did[16] = 0;
-        }
+        // void SetID(const std::string& s) {
+        //     for (size_t i = 0 ; i < 16 && i < s.length() ; i++) {
+        //         this->did[i]  = s[i];
+        //     }
+        //     this->did[16] = 0;
+        // }
         // static void RegisterType(std::string& device);
         virtual void tick() {
             std::cout << "WIP" << '\n';

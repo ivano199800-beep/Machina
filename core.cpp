@@ -10,7 +10,7 @@ void core16::start() {
 void core16::tick() {
     auto& stage = modes[0];
     if (stage == 0) { 
-        std::cout << "halted" << std::endl;
+        //std::cout << "halted" << std::endl;
         if (!this->Receive(1)) return;
         stage = 1;
         return;
@@ -32,7 +32,7 @@ void core16::tick() {
         }
     }
     else if (stage == 2) {
-        std::cout << "pending " << std::hex << (int)this->modes[2] << std::endl;
+        //std::cout << "pending " << std::hex << (int)this->modes[2] << std::endl;
         if (this->modes[2] == 1) {
             if (this->Receive(8) == 2) {
                 return;
@@ -50,12 +50,13 @@ void core16::tick() {
                 stage = 3;
             }
         }
-    } else if (stage == 3) {
+    } 
+else if (stage == 3) {
         // execute stage
         //WIP
-        std::cout <<
-        "WIP: the instruction Register for debugging " << (int)this->hiddenReg[0] << '\n' <<
-        "IP = " << (int)this->regx[7] << std::endl;
+        //std::cout <<
+        //"WIP: the instruction Register for debugging " << (int)this->hiddenReg[0] << '\n' <<
+        //"IP = " << (int)this->regx[7] << std::endl;
         INSTR_ instr = this->hiddenReg[0];
         HWORD_ opcode   = (instr >> 11) & 0x1f;
         HWORD_ opmode   = (instr >> 8) & 0x7;
@@ -86,11 +87,11 @@ void core16::tick() {
             "RCV", // 1
             "SND" // 1
         };
-        std::cout << "opcode " << ops[(int)opcode] << '\n' <<
-        "opmode " << (int)opmode << '\n' <<
-        "regB " << (int)regB << '\n' <<
-        "regA " << (int)regA << '\n' <<
-        "rMode " <<  (int)rMode << '\n';
+        //std::cout << "opcode " << ops[(int)opcode] << '\n' <<
+        //"opmode " << (int)opmode << '\n' <<
+        //"regB " << (int)regB << '\n' <<
+        //"regA " << (int)regA << '\n' <<
+        //"rMode " <<  (int)rMode << '\n';
 
         switch ((isa)opcode) {
             case isa::NOP:
@@ -243,6 +244,7 @@ void core16::tick() {
                 break;
             }
             }
+        }
         this->regx[7]++;
         end:
         stage = 1;
@@ -258,7 +260,6 @@ void core16::tick() {
         this->modes[2] = 2 ;
     }
 }
-
 
 void core16::set(HWORD_ key , HWORD_ value) {
     this->modes[key % 0x20] = value;

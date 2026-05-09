@@ -14,6 +14,9 @@ int main() {
     devX.RegisterPortS1(16);
     core.RegisterPortS1(16);
     mem.RegisterPortS1(4);
+    devX.RegisterDID(std::string("devX"));
+    core.RegisterDID(std::string("core"));
+    mem.RegisterDID(std::string("Memory"));
     for (int i = 0 ; i < 8 ; i++) {
         auto& line = lanes[i];
         Port p;
@@ -61,7 +64,7 @@ int main() {
     for (int i = 0 ; i <15 * 5 ; i++) {
         core.tick();
         mem.tick();
-        std::cout << "devX Signal: " << (int)devX.Receive(7) << std::endl;
+        //std::cout << "devX Signal: " << (int)devX.Receive(7) << std::endl;
         if (!devX.Receive(1)) break; 
     }
     

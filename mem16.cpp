@@ -14,10 +14,10 @@ void mem16::tick() {
     else if (mode == 1) {
         //write
         this->data[addr] = data;
-        std::cout << "written " <<  std::hex << data << " to [" << std::hex << addr<< "]\n";
+        //std::cout << "written " <<  std::hex << data << " to [" << std::hex << addr<< "]\n";
     } else if (mode == 2) {
         this->Send(1 , this->data[addr]);
-        std::cout << "read " <<  std::hex << this->data[addr] << " from  [" << std::hex << addr<< "]\n";
+        //std::cout << "read " <<  std::hex << this->data[addr] << " from  [" << std::hex << addr<< "]\n";
     } else {
         std::cout << "mem16 WIP" << '\n';
     }

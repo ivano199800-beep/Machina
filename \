@@ -1,0 +1,13 @@
+// C standard compliant
+#include <stdint.h>
+#include "default_function.h"
+struct device_registry {
+
+};
+struct device_entry {
+  struct device_registry* dvrg;
+  default_function tick;
+  default_function irhd;
+  default_function rset;
+  void* data;
+};

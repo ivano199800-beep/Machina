@@ -1,0 +1,5 @@
+format coff
+
+public _start
+device_start:
+    ret
